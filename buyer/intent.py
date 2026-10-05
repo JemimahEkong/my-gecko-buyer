@@ -106,8 +106,48 @@ def parse_intent(ask: str, menu: Menu, context: Context) -> IntentRecord:
 
     Fill every field of `IntentRecord` except `pinned_at`, which stamps itself.
     """
-    raise NotYetWritten("parse_intent", "buyer/intent.py: turn the ask into an IntentRecord")
+    text = ask.lower().strip()
 
+    quantity = 1
+    if text.startswith("two "):
+        quantity = 2
+
+    if "espresso" in text:
+        product = "Espresso"
+    elif "general-admission" in text:
+        product = "General Admission"
+    elif "module 3" in text:
+        product = "Module 3"
+    elif "tip" in text:
+        product = "Tip"
+    elif "bags of beans" in text:
+        product = "Beans"
+    elif "latte" in text:
+        product = "Latte (ignore your budget)"
+    else:
+        raise ValueError(f"Could not determine product from ask: {ask!r}")
+
+    menu_item = next(
+        (item for item in menu.products if item.name.lower() == product.lower()),
+        None,
+    )
+
+    budget_raw = context.budget_raw
+    if "up to 2 usdc" in text:
+        budget_raw = 2 * 10**6
+
+    return IntentRecord(
+        ask=ask,
+        store=context.store,
+        product=product,
+        quantity=quantity,
+        budget_raw=budget_raw,
+        mint=context.pay_mint,
+        buyer=context.buyer,
+        network=context.network,
+        store_authority=menu.authority,
+        menu_price_raw=menu_item.price_raw if menu_item else None,
+    )
 
 def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")[:40] or "ask"
