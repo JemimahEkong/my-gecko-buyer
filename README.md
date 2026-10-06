@@ -1,27 +1,23 @@
 # Dev3Pack Gecko capstone: a buyer that pays, or says why not
 
+This buyer pins the request before Gecko prepares bytes, checks the prepared purchase field by field, signs only after the checks pass, and reconciles the landing from the ledger.
+
+**Explorer:** https://explorer.solana.com/tx/3SgWuQiDppcuM144WDsV97A2e2vEZqSYLmkMoGDvmAATM8hcUXgeiztSbgMx27smKS1VaR6ZFJQreYZ7mXEKVpUi?cluster=devnet
+
+## Receipt
+
+See [`receipts/3SgWuQiD.md`](receipts/3SgWuQiD.md) for the committed devnet receipt. It records the transaction signature, explorer link, buyer/store ledger deltas, and `total_purchases` moving from 0 to 1.
+
+## Refusal
+
+The quantity failure refused before signing: **asked 2, prepared 1**.
+
+See [`refusals/20261006T051807.718569-quantity.json`](refusals/20261006T051807.718569-quantity.json).
+
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![uv](https://img.shields.io/badge/uv-managed-6e56cf)
 ![Solana](https://img.shields.io/badge/Solana-devnet-9945FF)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-
-**Open your own store on Solana devnet and build a buyer agent that buys from it through
-Gecko: it pins what was asked before any bytes exist, refuses by field when the prepared
-purchase disagrees, signs only after a passing simulation, and writes one receipt, read
-from the ledger, that says what moved.**
-
-You ask once, in plain words. Your agent reads the menu through Gecko, gets the purchase
-prepared as unsigned bytes, checks every field against what you asked, signs only if they
-agree, and writes one receipt that says what moved. When they disagree, it refuses and
-names the field.
-
-A purchase that lands proves the plumbing. A purchase refused by field proves you.
-
-Gecko is how an agent moves money on Solana and proves it landed as asked. It holds no
-key and signs nothing: your signer does.
-
-This is your capstone project, presented on **Friday 2 October**. The certificate is the
-final assignment, graded privately in its own repository; nothing here changes that grade.
 
 ## Contents
 
