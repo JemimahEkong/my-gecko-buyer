@@ -28,6 +28,7 @@ you registered is remembered (public, no key) in ~/.config/dev3pack/registered-w
 
 from __future__ import annotations
 
+import stat
 import argparse
 import getpass
 import json
@@ -100,11 +101,16 @@ def create(path: Path) -> int:
         return 1
     with os.fdopen(fd, "w") as handle:
         json.dump(list(bytes(key)), handle)
+
+    if os.name == "nt":
+        os.chmod(path, stat.S_IREAD | stat.S_IWRITE)
+    else:
+        os.chmod(path, 0o600)
+
     print(f"made     {path}  (mode 600, never commit it, never share it)")
     print(f"address  {key.pubkey()}")
     print("\nNext: `gecko login`, then `uv run python scripts/mainnet_wallet.py register`.")
     return 0
-
 
 def _wallet(path: Path) -> Keypair | None:
     try:

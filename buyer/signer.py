@@ -35,8 +35,12 @@ from .prepared import Prepared
 
 def config_dir() -> Path:
     """Where keys live: ~/.config/dev3pack/, or DEV3PACK_HOME. Read at call time, not import."""
-    return Path(os.environ.get("DEV3PACK_HOME", Path.home() / ".config" / "dev3pack"))
-
+    home = os.environ.get("HOME")
+    if home:
+        default = Path(home) / ".config" / "dev3pack"
+    else:
+        default = Path.home() / ".config" / "dev3pack"
+    return Path(os.environ.get("DEV3PACK_HOME", default))
 
 CONFIG_DIR = config_dir()
 
